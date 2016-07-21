@@ -1,0 +1,61 @@
+/* CSS Document */
+html {
+  overflow-y: scroll;
+}
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, img, a, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, dt, th, strong {
+  font-weight: normal;
+}
+
+table {
+  border: 0 none;
+  border-collapse:collapse;
+  border-spacing:0;
+  empty-cells:show;
+}
+
+ol, ul {
+  list-style: none outside none;
+}
+
+img {
+  border: medium none;
+}
+
+li {
+  list-style: none outside none;
+}
+
+th {
+  text-align: left;
+}
+
+sup, sub {
+  vertical-align: text-top;
+}
+
+sub {
+  vertical-align: text-bottom;
+}
+
+html{
+  font-size:62.5%; /*基準を10pxにリセット*/
+}
+
+
+.clearfix:after {
+  clear: both;
+  content: " ";
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+
+.clearfix {
+  display: block;
+}
