@@ -1,35 +1,47 @@
 var gulp = require('gulp');
-var browserSync = require('browser-sync').create();
+var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var plumber = require('gulp-plumber');
 var sass = require('gulp-sass');
-gulp.task('sass',function(){
+var prefixer = require('gulp-autoprefixer');
+var babel = require('gulp-babel');
+
+gulp.task('sass',() => {
     gulp.src(['scss/**/*.scss'])
         .pipe(plumber({
-            handleError: function (err) {
+            handleError: (err) => {
                 console.log(err);
                 this.emit('end');
             }
+        }))
+        .pipe(prefixer({
+            browsers: ["last 2 versions", "ie >= 8", "Android >= 2","ios_saf >= 6"],
+            cascade: false
         }))
         .pipe(sass())
         .pipe(gulp.dest('css'))
         .pipe(reload())
 });
-gulp.task('js',function(){
-    gulp.src(['js/**/*.js'])
+
+gulp.task('es6',() => {
+    gulp.src(['es6/**/*.js'])
         .pipe(plumber({
-            handleError: function (err) {
+            handleError: (err) => {
                 console.log(err);
                 this.emit('end');
             }
         }))
+        .pipe(babel({
+            presets: ['es2015']
+        }))
         .pipe(gulp.dest('js'))
         .pipe(reload())
 });
-gulp.task('html',function(){
+
+gulp.task('html',() => {
     gulp.src(['./*.html'])
         .pipe(plumber({
-            handleError: function (err) {
+            handleError: (err) => {
                 console.log(err);
                 this.emit('end');
             }
@@ -37,12 +49,13 @@ gulp.task('html',function(){
         .pipe(gulp.dest('./'))
         .pipe(reload())
 });
-gulp.task('default',function(){
+
+
+gulp.task('default',() => {
     browserSync.init({
         server: "./"
     });
-    gulp.watch('js/**/*.js',['js']);
+    gulp.watch('es6/**/*.js',['es6']);
     gulp.watch('scss/**/*.scss',['sass']);
-    gulp.watch('./*.html',['html']);
-    gulp.watch('img/src/**/*',['image']);
+    gulp.watch('./**/*.html',['html']);
 });
