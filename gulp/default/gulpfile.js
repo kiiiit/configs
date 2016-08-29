@@ -1,15 +1,17 @@
-var gulp = require('gulp');
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var plumber = require('gulp-plumber');
-var sass = require('gulp-sass');
-var prefixer = require('gulp-autoprefixer');
-var babel = require('gulp-babel');
+var gulp = require('gulp'),
+    browserSync = require('browser-sync').create(),
+    reload = browserSync.reload,
+    plumber = require('gulp-plumber'),
+    sass = require('gulp-sass'),
+    prefixer = require('gulp-autoprefixer'),
+    babel = require('gulp-babel'),
+    imagemin = require('gulp-imagemin');
 
-gulp.task('sass',() => {
-    gulp.src(['scss/**/*.scss'])
+
+gulp.task('sass',()=>{
+    gulp.src(['src/**/*.scss'])
         .pipe(plumber({
-            handleError: (err) => {
+            handleError: (err)=>{
                 console.log(err);
                 this.emit('end');
             }
@@ -19,14 +21,13 @@ gulp.task('sass',() => {
             cascade: false
         }))
         .pipe(sass())
-        .pipe(gulp.dest('css'))
+        .pipe(gulp.dest('dest/'))
         .pipe(reload())
 });
-
-gulp.task('es6',() => {
-    gulp.src(['es6/**/*.js'])
+gulp.task('js',()=>{
+    gulp.src(['src/**/*.js'])
         .pipe(plumber({
-            handleError: (err) => {
+            handleError: (err)=>{
                 console.log(err);
                 this.emit('end');
             }
@@ -34,28 +35,39 @@ gulp.task('es6',() => {
         .pipe(babel({
             presets: ['es2015']
         }))
-        .pipe(gulp.dest('js'))
+        .pipe(gulp.dest('dest/'))
         .pipe(reload())
 });
-
-gulp.task('html',() => {
-    gulp.src(['./*.html'])
+gulp.task('html',()=>{
+    gulp.src(['src/**/*.html'])
         .pipe(plumber({
-            handleError: (err) => {
+            handleError: (err)=>{
                 console.log(err);
                 this.emit('end');
             }
         }))
-        .pipe(gulp.dest('./'))
+        .pipe(gulp.dest('dest/'))
         .pipe(reload())
 });
+gulp.task('imagemin',()=>{
+    gulp.src(['src/**/images/*'])
+    .pipe(plumber({
+        handleError: (err)=>{
+            console.log(err);
+            this.emit('end');
+        }
+    }))
+    .pipe(imagemin())
+    .pipe(gulp.dest('dest/'))
+    .pipe(reload())
+});
 
-
-gulp.task('default',() => {
+gulp.task('default',()=>{
     browserSync.init({
-        server: "./"
+        server: "dest/tv/"
     });
-    gulp.watch('es6/**/*.js',['es6']);
-    gulp.watch('scss/**/*.scss',['sass']);
-    gulp.watch('./**/*.html',['html']);
+    gulp.watch('src/**/*.js',['js']);
+    gulp.watch('src/**/*.scss',['sass']);
+    gulp.watch('src/**/*.html',['html']);
+    gulp.watch('src/**/images/',['imagemin']);
 });
