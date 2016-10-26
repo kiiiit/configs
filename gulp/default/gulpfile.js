@@ -4,8 +4,8 @@ var gulp = require('gulp'),
     plumber = require('gulp-plumber'),
     sass = require('gulp-sass'),
     prefixer = require('gulp-autoprefixer'),
-    babel = require('gulp-babel'),
-    imagemin = require('gulp-imagemin');
+    imgmin = require('gulp-imagemin'),
+    csscomb = require('gulp-csscomb');
 
 
 gulp.task('sass',()=>{
@@ -17,13 +17,15 @@ gulp.task('sass',()=>{
             }
         }))
         .pipe(prefixer({
-            browsers: ["last 2 versions", "ie >= 8", "Android >= 2","ios_saf >= 6"],
+            browsers: ["last 2 versions", "ie >= 8", "Android >= 4","ios_saf >= 6"],
             cascade: false
         }))
         .pipe(sass())
+        .pipe(csscomb())
         .pipe(gulp.dest('dest/'))
         .pipe(reload())
 });
+
 gulp.task('js',()=>{
     gulp.src(['src/**/*.js'])
         .pipe(plumber({
@@ -32,12 +34,10 @@ gulp.task('js',()=>{
                 this.emit('end');
             }
         }))
-        .pipe(babel({
-            presets: ['es2015']
-        }))
         .pipe(gulp.dest('dest/'))
         .pipe(reload())
 });
+
 gulp.task('html',()=>{
     gulp.src(['src/**/*.html'])
         .pipe(plumber({
@@ -49,7 +49,8 @@ gulp.task('html',()=>{
         .pipe(gulp.dest('dest/'))
         .pipe(reload())
 });
-gulp.task('imagemin',()=>{
+
+gulp.task('imgmin',()=>{
     gulp.src(['src/**/images/*'])
     .pipe(plumber({
         handleError: (err)=>{
@@ -57,17 +58,16 @@ gulp.task('imagemin',()=>{
             this.emit('end');
         }
     }))
-    .pipe(imagemin())
+    .pipe(imgmin())
     .pipe(gulp.dest('dest/'))
     .pipe(reload())
 });
 
 gulp.task('default',()=>{
     browserSync.init({
-        server: "dest/tv/"
+        server: "./"
     });
     gulp.watch('src/**/*.js',['js']);
     gulp.watch('src/**/*.scss',['sass']);
     gulp.watch('src/**/*.html',['html']);
-    gulp.watch('src/**/images/',['imagemin']);
 });
