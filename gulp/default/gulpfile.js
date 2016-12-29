@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
     browserSync = require('browser-sync').create(),
-    reload = browserSync.reload,
     plumber = require('gulp-plumber'),
     sass = require('gulp-sass'),
     prefixer = require('gulp-autoprefixer'),
@@ -23,7 +22,6 @@ gulp.task('sass',()=>{
         .pipe(sass())
         .pipe(csscomb())
         .pipe(gulp.dest('dest/'))
-        .pipe(reload())
 });
 
 gulp.task('js',()=>{
@@ -35,7 +33,6 @@ gulp.task('js',()=>{
             }
         }))
         .pipe(gulp.dest('dest/'))
-        .pipe(reload())
 });
 
 gulp.task('html',()=>{
@@ -47,7 +44,6 @@ gulp.task('html',()=>{
             }
         }))
         .pipe(gulp.dest('dest/'))
-        .pipe(reload())
 });
 
 gulp.task('imgmin',()=>{
@@ -60,14 +56,17 @@ gulp.task('imgmin',()=>{
     }))
     .pipe(imgmin())
     .pipe(gulp.dest('dest/'))
-    .pipe(reload())
 });
+
+gulp.task('reload',()=>{
+    browserSync.reload()
+})
 
 gulp.task('default',()=>{
     browserSync.init({
-        server: "./"
+        server: "./dest/"
     });
-    gulp.watch('src/**/*.js',['js']);
-    gulp.watch('src/**/*.scss',['sass']);
-    gulp.watch('src/**/*.html',['html']);
+    gulp.watch('src/**/*.js',['js','reload']);
+    gulp.watch('src/**/*.scss',['sass','reload']);
+    gulp.watch('src/**/*.html',['html','reload']);
 });
